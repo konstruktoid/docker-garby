@@ -18,27 +18,24 @@ containerRemoval(){
 
     if [ "$containerStatus" = "created" -a "$containerRunningState" = "false" ]; then
       logAllThings "Container $containerName ($con) is in 'created' state."
-      logAllThings "Container $containerName ($con) is using image $imageName."
     fi
 
     if [ "$containerDead" = "true" -a "$containerRunningState" = "false" ]; then
       logAllThings "Container $containerName ($con) is in 'dead' state."
-      logAllThings "Container $containerName ($con) is using image $imageName."
     fi
 
-    if [ "$containerStatus" = "exited" ]; then
-      if [ "$diffOutput" -gt $maxSecondsOld -a "$containerRunningState" = "false" ]; then
-        logAllThings "Container $containerName ($con) finished $diffOutput seconds ago."
-        logAllThings "Container $containerName ($con) used image $imageName."
-        docker rm "$con" 2>/dev/null 1>&2
+    if [ "$diffOutput" -gt $maxSecondsOld -a "$containerRunningState" = "false" ]; then
+      logAllThings "Container $containerName ($con) finished $diffOutput seconds ago."
+      logAllThings "Container $containerName ($con) used image $imageName."
+      docker rm "$con" 2>/dev/null 1>&2
 
-        if [ "$?" -eq 0 ]; then
-          logAllThings "Container $containerName ($con) removed."
-          else
-          logAllThings "ERR: Container $containerName ($con) was not removed."
-        fi
+      if [ "$?" -eq 0 ]; then
+        logAllThings "Container $containerName ($con) removed."
+        else
+        logAllThings "ERR: Container $containerName ($con) was not removed."
       fi
     fi
+
   done
 }
 
@@ -102,7 +99,15 @@ removeTmpFiles(){
 timeDiff(){
   dateEpoch=$(date +%s)
   convertToEpoch=$(date -d "$1" +%s)
-  timeDiffSeconds="$((dateEpoch - convertToEpoch))"
+
+  if [ "$convertToEpoch" -lt 0 ]; then
+    # this is negative, which means no exit state"
+    containerEpoch="$dateEpoch"
+    else
+    containerEpoch="$convertToEpoch"
+  fi
+
+  timeDiffSeconds="$((dateEpoch - containerEpoch))"
 
   echo "$timeDiffSeconds"
 }
