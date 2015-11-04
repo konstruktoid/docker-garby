@@ -23,3 +23,8 @@ $ tail docker-garby.log-20151104
 [20151104191319] Image [alpine:2.7] (fda36aee3ed62c8c5ccccd37ebc10008e53fd4e544e8af0c76f1697c00b654b2) unused.
 [20151104191320] Image [alpine:2.7] (fda36aee3ed62c8c5ccccd37ebc10008e53fd4e544e8af0c76f1697c00b654b2) removed.
 ```
+
+## Tested Docker versions
+`Docker version 1.9.0, build 76d6bc9`  
+`Docker version 1.8.2-fc22, build f1db8f2/1.8.2`  
+`Docker version 1.10.0-dev, build 67630be, experimental`
