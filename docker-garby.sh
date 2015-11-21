@@ -1,6 +1,6 @@
 #!/bin/sh
 
-logFile="./docker-garby.log"
+logFile="syslog"
 maxSecondsOld=3600
 
 containerRemoval(){
@@ -84,7 +84,13 @@ imageRemoval(){
 logAllThings(){
   logDate=$(date +%Y%m%d)
   logDateEntry=$(date +%Y%m%d%H%M%S)
-  echo "[$logDateEntry] $1" >> "$logFile-$logDate"
+  if [ "$logFile" = "syslog" ]; then
+    logger -i -t 'docker-garby' -p 'user.info' "$1"
+    elif [ -z "$logFile" ]; then
+    echo "[$logDateEntry] $1"
+    else
+    echo "[$logDateEntry] $1" >> "$logFile-$logDate"
+  fi
 }
 
 removeTmpFiles(){
