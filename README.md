@@ -5,7 +5,9 @@
 Just another Docker garbage collection script.
 
 ## Configuration options
-`logFile="./docker-garby.log"` Logfile, will be appended with `-$(date +%Y%m%d)`.  
+`logFile=""` Write to console.  
+`logFile="./docker-garby.log"` Write to a logfile, will be appended with `-$(date +%Y%m%d)`.  
+`logFile="syslog"` Write to syslog.  
 `maxSecondsOld=3600` How old a container has to be in seconds before removing it.
 
 ## Example
@@ -25,6 +27,6 @@ $ tail docker-garby.log-20151104
 ```
 
 ## Tested Docker versions
+`Docker version 1.10.0-dev, build 55711a2, experimental`  
 `Docker version 1.9.0, build 76d6bc9`  
 `Docker version 1.8.2-fc22, build f1db8f2/1.8.2`  
-`Docker version 1.10.0-dev, build 67630be, experimental`
