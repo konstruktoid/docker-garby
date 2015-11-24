@@ -13,17 +13,23 @@ Just another Docker garbage collection script.
 ## Example
 ```sh
 $ sh docker-garby.sh
-$ tail docker-garby.log-20151104
-[20151104191316] Image [fedora:21] (db9d08baf815190c5e08d29d2049465d69107bc2fbda60409ba90fc57422d398) unused.
-[20151104191317] Image [fedora:21] (db9d08baf815190c5e08d29d2049465d69107bc2fbda60409ba90fc57422d398) removed.
-[20151104191317] Image [] (ded7cd95e059788f2586a51c275a4f151653779d6a7f4dad77c2bd34601d94e4) unused.
-[20151104191319] Image [] (ded7cd95e059788f2586a51c275a4f151653779d6a7f4dad77c2bd34601d94e4) removed.
-[20151104191319] Image [konstruktoid/debian:wheezy] (e7923fc8c179eb134b492fcd2a3fe6e2860d7e4ec63fad319f9af245a0c4f8a1) unused.
-[20151104191319] Image [konstruktoid/debian:wheezy] (e7923fc8c179eb134b492fcd2a3fe6e2860d7e4ec63fad319f9af245a0c4f8a1) removed.
-[20151104191319] Image [centos:7 centos:latest] (e9fa5d3a0d0e19519e66af2dd8ad6903a7288de0e995b6eafbcb38aebf2b606d) unused.
-[20151104191319] ERR: Image [centos:7 centos:latest] (e9fa5d3a0d0e19519e66af2dd8ad6903a7288de0e995b6eafbcb38aebf2b606d) was not removed.
-[20151104191319] Image [alpine:2.7] (fda36aee3ed62c8c5ccccd37ebc10008e53fd4e544e8af0c76f1697c00b654b2) unused.
-[20151104191320] Image [alpine:2.7] (fda36aee3ed62c8c5ccccd37ebc10008e53fd4e544e8af0c76f1697c00b654b2) removed.
+$ sudo journalctl SYSLOG_IDENTIFIER=docker-garby -r
+-- Logs begin at Mon 2015-11-23 21:26:07 CET, end at Tue 2015-11-24 16:40:14 CET. --
+Nov 24 16:39:32 lab01 docker-garby[3709]: Image [] (2c49029b02e501a7a70e74adcd8b71478a5c3652a56037cd52815f101fae46b2) unused.
+Nov 24 16:39:32 lab01 docker-garby[3701]: Image [] (179c93e1cbd3918023c7cb65b4d665782292efb5e806c108fa1293538abc4b69) removed.
+Nov 24 16:39:06 lab01 docker-garby[3693]: Image [] (179c93e1cbd3918023c7cb65b4d665782292efb5e806c108fa1293538abc4b69) unused.
+Nov 24 16:39:05 lab01 docker-garby[3646]: Container /cass01 (5d488e9b74df) removed.
+Nov 24 16:39:03 lab01 docker-garby[3639]: Container /cass01 (5d488e9b74df) used image [cassandra:latest].
+Nov 24 16:39:03 lab01 docker-garby[3636]: Container /cass01 (5d488e9b74df) finished 65648 seconds ago.
+Nov 24 16:39:03 lab01 docker-garby[3601]: Container /naughty_brahmagupta (b44fb1687291) removed.
+Nov 24 16:39:02 lab01 docker-garby[3594]: Container /naughty_brahmagupta (b44fb1687291) used image [].
+Nov 24 16:39:02 lab01 docker-garby[3591]: Container /naughty_brahmagupta (b44fb1687291) finished 71230 seconds ago.
+Nov 24 16:39:02 lab01 docker-garby[3556]: Container /sleepy_raman (0eaf21670e43) removed.
+Nov 24 16:39:02 lab01 docker-garby[3549]: Container /sleepy_raman (0eaf21670e43) used image [].
+Nov 24 16:39:02 lab01 docker-garby[3546]: Container /sleepy_raman (0eaf21670e43) finished 71185 seconds ago.
+Nov 24 16:39:01 lab01 docker-garby[3510]: Container /backstabbing_morse (195e00cafdbf) removed.
+Nov 24 16:39:01 lab01 docker-garby[3503]: Container /backstabbing_morse (195e00cafdbf) used image [].
+Nov 24 16:39:01 lab01 docker-garby[3500]: Container /backstabbing_morse (195e00cafdbf) finished 71127 seconds ago.
 ```
 
 ## Tested Docker versions
