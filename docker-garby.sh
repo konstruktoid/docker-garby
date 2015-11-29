@@ -12,8 +12,8 @@ containerRemoval(){
     containerName=$(docker inspect -f '{{.Name}}' "$con")
     containerRunningState=$(docker inspect -f '{{.State.Running}}' "$con")
     containerStatus=$(docker inspect -f '{{.State.Status}}' "$con")
-    diffOutput=$(timeDiff "$containerFinished")
     imageName=$(docker inspect -f '{{.RepoTags}}' "$containerImage")
+    timeDiffOutput=$(timeDiff "$containerFinished")
     echo "$containerImage" >> "$usedImagesLog"
 
     if [ "$containerStatus" = "created" -a "$containerRunningState" = "false" ]; then
@@ -24,8 +24,8 @@ containerRemoval(){
       logAllThings "Container $containerName ($con) is in 'dead' state."
     fi
 
-    if [ "$diffOutput" -gt $maxSecondsOld -a "$containerRunningState" = "false" ]; then
-      logAllThings "Container $containerName ($con) finished $diffOutput seconds ago."
+    if [ "$timeDiffOutput" -gt $maxSecondsOld -a "$containerRunningState" = "false" ]; then
+      logAllThings "Container $containerName ($con) finished $timeDiffOutput seconds ago."
       logAllThings "Container $containerName ($con) used image $imageName."
       docker rm "$con" 2>/dev/null 1>&2
 
