@@ -106,8 +106,9 @@ removeTmpFiles(){
 }
 
 timeDiff(){
+  containerTime="$(echo "$1" | sed -e 's/ +.*/Z/' -e 's/ /T/')"
   dateEpoch=$(date +%s)
-  convertToEpoch=$(date -d "$1" +%s)
+  convertToEpoch="$(date -d "$containerTime" +%s)"
 
   if [ "$convertToEpoch" -lt 0 ]; then
     # this is negative, which means no exit state"
@@ -117,7 +118,6 @@ timeDiff(){
   fi
 
   timeDiffSeconds="$((dateEpoch - containerEpoch))"
-
   echo "$timeDiffSeconds"
 }
 
