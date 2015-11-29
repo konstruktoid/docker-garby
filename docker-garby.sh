@@ -40,12 +40,15 @@ containerRemoval(){
 }
 
 defineTmpFiles(){
-  allContainersLog=$(mktemp -t allContainers.XXXX)
-  allImagesLog=$(mktemp -t allImages.XXXX)
-  allImagesTmpLog=$(mktemp -t allImagesTmp.XXXX)
-  removeImagesLog=$(mktemp -t removeImages.XXXX)
-  usedImagesLog=$(mktemp -t usedImages.XXXX)
-  usedImagesTmpLog=$(mktemp -t usedImagesTmp.XXXX)
+  if [ -z "$TMP" ]; then
+    export TMP='/tmp'
+  fi
+  allContainersLog=$(mktemp -p "${TMPDIR:-$TMP}" allContainers.XXXX)
+  allImagesLog=$(mktemp -p "${TMPDIR:-$TMP}" allImages.XXXX)
+  allImagesTmpLog=$(mktemp -p "${TMPDIR:-$TMP}" allImagesTmp.XXXX)
+  removeImagesLog=$(mktemp -p "${TMPDIR:-$TMP}" removeImages.XXXX)
+  usedImagesLog=$(mktemp -p "${TMPDIR:-$TMP}" usedImages.XXXX)
+  usedImagesTmpLog=$(mktemp -p "${TMPDIR:-$TMP}" usedImagesTmp.XXXX)
 }
 
 gatherBasicInfo(){
