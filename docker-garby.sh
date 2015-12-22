@@ -4,6 +4,13 @@ logFile="syslog"
 maxSecondsOld=3600
 
 containerRemoval(){
+  containerCount=$(docker ps -qa | wc -l)
+
+  if [ "$containerCount" -lt 1 ]; then
+    logAllThings "No containers found."
+    return
+  fi
+
   for con in $(docker ps -qa); do
     # yeah, all this 'docker inspect' stuff should probably be done just once
     containerDead=$(docker inspect -f '{{.State.Dead}}' "$con")
@@ -66,6 +73,13 @@ gatherBasicInfo(){
 }
 
 imageRemoval(){
+  imageCount=$(docker ps -qa | wc -l)
+
+  if [ "$imageCount" -lt 1 ]; then
+    logAllThings "No images found."
+    return
+  fi
+
   sort "$allImagesLog" | uniq > "$allImagesTmpLog"
   sort "$usedImagesLog" | uniq > "$usedImagesTmpLog"
   comm -23 "$allImagesTmpLog" "$usedImagesTmpLog" > "$removeImagesLog"
