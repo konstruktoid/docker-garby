@@ -99,8 +99,8 @@ imageRemoval(){
 }
 
 logAllThings(){
-  logDate=$(date +%Y%m%d)
-  logDateEntry=$(date +%Y%m%d%H%M%S)
+  logDate=$(LC_ALL=C date -u +%Y%m%d)
+  logDateEntry=$(LC_ALL=C date -u +%Y%m%d%H%M%S)
   if [ "$logFile" = "syslog" ]; then
     logger -i -t 'docker-garby' -p 'user.info' "$1"
     elif [ -z "$logFile" ]; then
@@ -121,8 +121,8 @@ removeTmpFiles(){
 
 timeDiff(){
   containerTime="$(echo "$1" | sed -e 's/ +.*/Z/' -e 's/ /T/')"
-  dateEpoch=$(date +%s)
-  convertToEpoch="$(date -d "$containerTime" +%s)"
+  dateEpoch=$(LC_ALL=C date -u +%s)
+  convertToEpoch="$(LC_ALL=C date -u -d "$containerTime" +%s)"
 
   if [ "$convertToEpoch" -lt 0 ]; then
     # this is negative, which means no exit state"
