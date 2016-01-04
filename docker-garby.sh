@@ -108,12 +108,17 @@ imageRemoval(){
 logAllThings(){
   logDate=$(LC_ALL=C date -u +%Y%m%d)
   logDateEntry=$(LC_ALL=C date -u +%Y%m%d%H%M%S)
-  if [ "$logFile" = "syslog" ]; then
-    logger -i -t 'docker-garby' -p 'user.info' "$1"
-    elif [ -z "$logFile" ]; then
+
+  if ls -l /proc/$$/exe | grep busybox 2>/dev/null 1>&2; then
     echo "[$logDateEntry] $1"
+  fi
+
+  if [ "$logFile" = "syslog" ]; then
+    logger -t 'docker-garby' -p 'user.info' "$1"
+    elif [ -z "$logFile" ]; then
+      echo "[$logDateEntry] $1"
     else
-    echo "[$logDateEntry] $1" >> "$logFile-$logDate"
+      echo "[$logDateEntry] $1" >> "$logFile-$logDate"
   fi
 }
 
