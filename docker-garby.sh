@@ -57,12 +57,12 @@ defineTmpFiles(){
   if [ -z "$TMP" ]; then
     export TMP='/tmp'
   fi
-  allContainersLog=$(mktemp -p "${TMPDIR:-$TMP}" allContainers.XXXX)
-  allImagesLog=$(mktemp -p "${TMPDIR:-$TMP}" allImages.XXXX)
-  allImagesTmpLog=$(mktemp -p "${TMPDIR:-$TMP}" allImagesTmp.XXXX)
-  removeImagesLog=$(mktemp -p "${TMPDIR:-$TMP}" removeImages.XXXX)
-  usedImagesLog=$(mktemp -p "${TMPDIR:-$TMP}" usedImages.XXXX)
-  usedImagesTmpLog=$(mktemp -p "${TMPDIR:-$TMP}" usedImagesTmp.XXXX)
+  allContainersLog=$(mktemp -p "${TMPDIR:-$TMP}" allContainers.XXXXXX)
+  allImagesLog=$(mktemp -p "${TMPDIR:-$TMP}" allImages.XXXXXX)
+  allImagesTmpLog=$(mktemp -p "${TMPDIR:-$TMP}" allImagesTmp.XXXXXX)
+  removeImagesLog=$(mktemp -p "${TMPDIR:-$TMP}" removeImages.XXXXXX)
+  usedImagesLog=$(mktemp -p "${TMPDIR:-$TMP}" usedImages.XXXXXX)
+  usedImagesTmpLog=$(mktemp -p "${TMPDIR:-$TMP}" usedImagesTmp.XXXXXX)
 }
 
 gatherBasicInfo(){
