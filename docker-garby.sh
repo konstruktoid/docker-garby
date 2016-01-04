@@ -25,10 +25,24 @@ containerRemoval(){
 
     if [ "$containerStatus" = "created" -a "$containerRunningState" = "false" ]; then
       logAllThings "Container $containerName ($con) is in 'created' state."
+      docker rm "$con" 2>/dev/null 1>&2
+
+      if [ "$?" -eq 0 ]; then
+        logAllThings "Container $containerName ($con) removed."
+        else
+        logAllThings "ERR: Container $containerName ($con) was not removed."
+      fi
     fi
 
     if [ "$containerDead" = "true" -a "$containerRunningState" = "false" ]; then
       logAllThings "Container $containerName ($con) is in 'dead' state."
+      docker rm "$con" 2>/dev/null 1>&2
+
+      if [ "$?" -eq 0 ]; then
+        logAllThings "Container $containerName ($con) removed."
+        else
+        logAllThings "ERR: Container $containerName ($con) was not removed."
+      fi
     fi
 
     if [ "$timeDiffOutput" -gt $maxSecondsOld -a "$containerRunningState" = "false" ]; then
