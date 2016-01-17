@@ -36,15 +36,15 @@ Nov 24 16:39:01 lab01 docker-garby[3500]: Container /backstabbing_morse (195e00c
 
 ### Docker
 ```sh
-$ docker run -v /var/run/docker.sock:/var/run/docker.sock konstruktoid/docker-garby
-[20160105001725] Image [alpine:3.2] (sha256:1bb4fa2ed6b70e380252e6aeec4eed41ba0886ffbb570b9dc4350d81043043c2) unused.
-[20160105001725] ERR: Image [alpine:3.2] (sha256:1bb4fa2ed6b70e380252e6aeec4eed41ba0886ffbb570b9dc4350d81043043c2) was not removed.
-[20160105001725] Image [garby03:latest] (sha256:6c940d8fd8304efa956ccc3a735b53585a63498e06f6219d7f8501b376045e72) unused.
-[20160105001725] Image [garby03:latest] (sha256:6c940d8fd8304efa956ccc3a735b53585a63498e06f6219d7f8501b376045e72) removed.
-[20160105001725] Image [] (sha256:9553ccd2bfd8b7d4dc7a7bf8fb154acb17782cfd6422d9c2e833360eacb53f68) unused.
-[20160105001725] Image [] (sha256:9553ccd2bfd8b7d4dc7a7bf8fb154acb17782cfd6422d9c2e833360eacb53f68) removed.
-[20160105001725] Image [busybox:latest] (sha256:d9551b4026f0e2950ddb557cc640871710bf88476ca938b71499305647231b82) unused.
-[20160105001725] Image [busybox:latest] (sha256:d9551b4026f0e2950ddb557cc640871710bf88476ca938b71499305647231b82) removed.
+$ docker run --rm --read-only --tmpfs /tmp:rw,nosuid,nodev -v /var/run/docker.sock:/var/run/docker.sock konstruktoid/docker-garby
+[20160117145731] Image [apt-cacher-ng:latest] (sha256:16eb74bfa06aec356a004824543c5dd36997ad6a6f29fd6b05e38b5df0b8b1fa) unused.
+[20160117145731] Image [apt-cacher-ng:latest] (sha256:16eb74bfa06aec356a004824543c5dd36997ad6a6f29fd6b05e38b5df0b8b1fa) removed.
+[20160117145731] Image [konstruktoid/ubuntubuild:latest] (sha256:279da7ddfd8734ab8f321c92e73f17860a4c94937f5641ed0054424103479665) unused.
+[20160117145732] Image [konstruktoid/ubuntubuild:latest] (sha256:279da7ddfd8734ab8f321c92e73f17860a4c94937f5641ed0054424103479665) removed.
+[20160117145732] Image [konstruktoid/debianbuild:latest] (sha256:6345a2f8305ca45ed71042392701f758b2dae783a96b283f62de7dbd51b8995f) unused.
+[20160117145732] Image [konstruktoid/debianbuild:latest] (sha256:6345a2f8305ca45ed71042392701f758b2dae783a96b283f62de7dbd51b8995f) removed.
+[20160117145732] Image [konstruktoid/debian:wheezy] (sha256:9ad6d790d09a22be7b8fa0e8cfe36c35d7e6330b2f4e8239370b2df650299c45) unused.
+[20160117145732] Image [konstruktoid/debian:wheezy] (sha256:9ad6d790d09a22be7b8fa0e8cfe36c35d7e6330b2f4e8239370b2df650299c45) removed.
 ```
 
 ## Tested Docker versions
