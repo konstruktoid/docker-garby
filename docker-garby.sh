@@ -80,7 +80,7 @@ gatherBasicInfo(){
 }
 
 imageRemoval(){
-  imageCount=$(docker ps -qa | wc -l)
+  imageCount=$(docker images -qa | wc -l)
 
   if [ "$imageCount" -lt 1 ]; then
     logAllThings "No images found."
