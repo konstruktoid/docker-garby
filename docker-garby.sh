@@ -122,6 +122,27 @@ logAllThings(){
   fi
 }
 
+volumeRemoval(){
+  volumeCount=$(docker volume ls -q --filter "dangling=true" | wc -l)
+
+  if [ "$volumeCount" -lt 1 ]; then
+    logAllThings "No dangling volumes found."
+    return
+  fi
+
+  for vol in $(docker volume ls -q); do
+    mountPoint=$(docker volume inspect --format '{{.Mountpoint}}' "$vol")
+    logAllThings "Volume $mountPoint unused."
+    docker volume rm "$vol" 2>/dev/null 1>&2
+
+    if [ "$?" -eq 0 ]; then
+      logAllThings "Volume $mountPoint removed."
+      else
+      logAllThings "ERR: Volume $mountPoint was not removed."
+    fi
+  done
+}
+
 removeTmpFiles(){
   rm "$allContainersLog"
   rm "$allImagesLog"
@@ -151,4 +172,5 @@ defineTmpFiles
 gatherBasicInfo
 containerRemoval
 imageRemoval
+volumeRemoval
 removeTmpFiles
