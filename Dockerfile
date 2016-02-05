@@ -1,6 +1,6 @@
 FROM alpine:3.2
 
-ENV VERSION 1.9.1
+ENV VERSION 1.10.0
 
 WORKDIR /usr/bin
 
