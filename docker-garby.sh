@@ -42,7 +42,7 @@ containerRemoval(){
     if [ "$remove" = 1 ]; then
       logAllThings "Container $containerName ($con) used image $imageName."
 
-      docker rm "$con" 2>/dev/null 1>&2
+      docker rm --volumes "$con" 2>/dev/null 1>&2
       if [ "$?" -eq 0 ]; then
         logAllThings "Container $containerName ($con) removed."
       else
