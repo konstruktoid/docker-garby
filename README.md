@@ -2,7 +2,7 @@
 
 ![Dinotrux character Garby](http://www.dreamworkstv.com/wp-content/uploads/2015/05/DTX-character-GARBY.jpg "Dinotrux character Garby")
 
-Just another Docker garbage collection script.
+Just another Docker garbage collection script, written for Docker version 1.9 and later.
 
 ## Configuration options
 `logFile=""` Write to console.  
@@ -47,7 +47,3 @@ $ docker run --rm --read-only --tmpfs /tmp:rw,nosuid,nodev -v /var/run/docker.so
 [20160117145732] Image [konstruktoid/debian:wheezy] (sha256:9ad6d790d09a22be7b8fa0e8cfe36c35d7e6330b2f4e8239370b2df650299c45) removed.
 ```
 
-## Tested Docker versions
-`Docker version 1.10.0-dev, build 194e695, experimental`  
-`Docker version 1.9.0, build 76d6bc9`  
-`Docker version 1.8.2-fc22, build f1db8f2/1.8.2`  
