@@ -109,7 +109,7 @@ logAllThings(){
   logDate=$(LC_ALL=C date -u +%Y%m%d)
   logDateEntry=$(LC_ALL=C date -u +%Y%m%d%H%M%S)
 
-  if ls -l /proc/$$/exe | grep busybox 2>/dev/null 1>&2; then
+  if find /proc/$$/exe -exec ls -l '{}' \; | grep busybox 2>/dev/null 1>&2; then
     echo "[$logDateEntry] $1"
   fi
 
