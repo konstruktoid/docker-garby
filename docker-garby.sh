@@ -4,22 +4,22 @@ logFile="syslog"
 maxSecondsOld=3600
 
 containerRemoval(){
-  containerCount=$(docker ps -qa | wc -l)
+  containerCount=$(docker ps --quiet --all | wc -l)
 
   if [ "$containerCount" -lt 1 ]; then
     logAllThings "No containers found."
     return
   fi
 
-  for con in $(docker ps -qa); do
+  for con in $(docker ps --quiet --all); do
     # yeah, all this 'docker inspect' stuff should probably be done just once
-    containerDead=$(docker inspect -f '{{.State.Dead}}' "$con")
-    containerFinished=$(docker inspect -f '{{.State.FinishedAt}}' "$con")
-    containerImage=$(docker inspect -f '{{.Image}}' "$con")
-    containerName=$(docker inspect -f '{{.Name}}' "$con")
-    containerRunningState=$(docker inspect -f '{{.State.Running}}' "$con")
-    containerStatus=$(docker inspect -f '{{.State.Status}}' "$con")
-    imageName=$(docker inspect -f '{{.RepoTags}}' "$containerImage")
+    containerDead=$(docker inspect --format '{{.State.Dead}}' "$con")
+    containerFinished=$(docker inspect --format '{{.State.FinishedAt}}' "$con")
+    containerImage=$(docker inspect --format '{{.Image}}' "$con")
+    containerName=$(docker inspect --format '{{.Name}}' "$con")
+    containerRunningState=$(docker inspect --format '{{.State.Running}}' "$con")
+    containerStatus=$(docker inspect --format '{{.State.Status}}' "$con")
+    imageName=$(docker inspect --format '{{.RepoTags}}' "$containerImage")
     timeDiffOutput=$(timeDiff "$containerFinished")
     echo "$containerImage" >> "$usedImagesLog"
     remove=0
@@ -66,8 +66,8 @@ defineTmpFiles(){
 }
 
 gatherBasicInfo(){
-  allContainers=$(docker ps --no-trunc -qa)
-  allImages=$(docker images --no-trunc -q)
+  allContainers=$(docker ps --no-trunc --quiet --all)
+  allImages=$(docker images --no-trunc --quiet)
 
   echo "$allContainers" > "$allContainersLog"
   echo "$allImages" > "$allImagesLog"
@@ -80,7 +80,7 @@ gatherBasicInfo(){
 }
 
 imageRemoval(){
-  imageCount=$(docker images -qa | wc -l)
+  imageCount=$(docker images --quiet --all | wc -l)
 
   if [ "$imageCount" -lt 1 ]; then
     logAllThings "No images found."
@@ -93,7 +93,7 @@ imageRemoval(){
 
   while read line
   do
-    imageName=$(docker inspect -f '{{.RepoTags}}' "$line")
+    imageName=$(docker inspect --format '{{.RepoTags}}' "$line")
     logAllThings "Image $imageName ($line) unused."
     docker rmi -f "$line" 2>/dev/null 1>&2
 
@@ -123,14 +123,14 @@ logAllThings(){
 }
 
 volumeRemoval(){
-  volumeCount=$(docker volume ls -q --filter "dangling=true" | wc -l)
+  volumeCount=$(docker volume ls --quiet --filter "dangling=true" | wc -l)
 
   if [ "$volumeCount" -lt 1 ]; then
     logAllThings "No dangling volumes found."
     return
   fi
 
-  for vol in $(docker volume ls -q); do
+  for vol in $(docker volume ls --quiet); do
     mountPoint=$(docker volume inspect --format '{{.Mountpoint}}' "$vol")
     logAllThings "Volume $mountPoint unused."
     docker volume rm "$vol" 2>/dev/null 1>&2
