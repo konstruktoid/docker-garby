@@ -1,6 +1,7 @@
 #!/bin/sh
 
-logFile="syslog"
+excludeImages="$(pwd)/docker-garby.exclude"
+logFile='syslog'
 maxSecondsOld=3600
 
 containerRemoval(){
@@ -89,7 +90,18 @@ imageRemoval(){
 
   sort "$allImagesLog" | uniq > "$allImagesTmpLog"
   sort "$usedImagesLog" | uniq > "$usedImagesTmpLog"
+
   comm -23 "$allImagesTmpLog" "$usedImagesTmpLog" > "$removeImagesLog"
+
+  if [ -f "$excludeImages" ]; then
+    while read exclude
+    do
+      keepImage=$(docker inspect --format '{{.Id}}' "$exclude")
+      imageName=$(docker inspect --format '{{.RepoTags}}' "$exclude")
+      sed -i "/$keepImage/d" "$removeImagesLog"
+      logAllThings "Image $imageName ($keepImage) excluded."
+    done < "$excludeImages"
+  fi
 
   while read line
   do
