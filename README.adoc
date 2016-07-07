@@ -5,10 +5,19 @@ image::http://www.dreamworkstv.com/wp-content/uploads/2015/05/DTX-character-GARB
 Just another Docker garbage collection script, written for Docker version 1.9 and later.
 
 == Configuration options
-`logFile=""` Write to console. +
-`logFile="./docker-garby.log"` Write to a logfile, will be appended with `-$(date +%Y%m%d)`. +
-`logFile="syslog"` Write to syslog. +
+`excludeImages="$(pwd)/docker-garby.exclude"` Exclude the images listed in this file. +
+`logFile=''` Write to console. +
+`logFile='./docker-garby.log'` Write to a logfile, will be appended with `-$(date +%Y%m%d)`. +
+`logFile='syslog'` Write to syslog. +
 `maxSecondsOld=3600` How old a container has to be in seconds before removing it.
+
+=== Excluding images
+The file available to `excludeImages` above, should contain either the name and version or the sha256 digest. +
+```sh
+$ cat docker-garby.exclude
+sha256:8e5aaa829fbdf9c04a9793e5c0ccb6e999a3dd8ba3fb198f38732a022266ca96
+nginx:latest
+```
 
 == Examples
 
@@ -16,34 +25,54 @@ Just another Docker garbage collection script, written for Docker version 1.9 an
 ```sh
 $ sh docker-garby.sh
 $ sudo journalctl SYSLOG_IDENTIFIER=docker-garby -r
--- Logs begin at Mon 2015-11-23 21:26:07 CET, end at Tue 2015-11-24 16:40:14 CET. --
-Nov 24 16:39:32 lab01 docker-garby[3709]: Image [] (2c49029b02e501a7a70e74adcd8b71478a5c3652a56037cd52815f101fae46b2) unused.
-Nov 24 16:39:32 lab01 docker-garby[3701]: Image [] (179c93e1cbd3918023c7cb65b4d665782292efb5e806c108fa1293538abc4b69) removed.
-Nov 24 16:39:06 lab01 docker-garby[3693]: Image [] (179c93e1cbd3918023c7cb65b4d665782292efb5e806c108fa1293538abc4b69) unused.
-Nov 24 16:39:05 lab01 docker-garby[3646]: Container /cass01 (5d488e9b74df) removed.
-Nov 24 16:39:03 lab01 docker-garby[3639]: Container /cass01 (5d488e9b74df) used image [cassandra:latest].
-Nov 24 16:39:03 lab01 docker-garby[3636]: Container /cass01 (5d488e9b74df) finished 65648 seconds ago.
-Nov 24 16:39:03 lab01 docker-garby[3601]: Container /naughty_brahmagupta (b44fb1687291) removed.
-Nov 24 16:39:02 lab01 docker-garby[3594]: Container /naughty_brahmagupta (b44fb1687291) used image [].
-Nov 24 16:39:02 lab01 docker-garby[3591]: Container /naughty_brahmagupta (b44fb1687291) finished 71230 seconds ago.
-Nov 24 16:39:02 lab01 docker-garby[3556]: Container /sleepy_raman (0eaf21670e43) removed.
-Nov 24 16:39:02 lab01 docker-garby[3549]: Container /sleepy_raman (0eaf21670e43) used image [].
-Nov 24 16:39:02 lab01 docker-garby[3546]: Container /sleepy_raman (0eaf21670e43) finished 71185 seconds ago.
-Nov 24 16:39:01 lab01 docker-garby[3510]: Container /backstabbing_morse (195e00cafdbf) removed.
-Nov 24 16:39:01 lab01 docker-garby[3503]: Container /backstabbing_morse (195e00cafdbf) used image [].
-Nov 24 16:39:01 lab01 docker-garby[3500]: Container /backstabbing_morse (195e00cafdbf) finished 71127 seconds ago.
+-- Logs begin at Tue 2016-06-28 09:26:37 CEST, end at Wed 2016-07-06 13:45:20 CEST. --
+Jul 06 13:45:19 tabdlab01 docker-garby[25641]: Image [konstruktoid/alpine:latest] (sha256:d879607f7403c3a12b1d5b0bc8d39e609d41be55b4a49923d33b08e897ad56de) removed.
+Jul 06 13:45:19 tabdlab01 docker-garby[25632]: Image [konstruktoid/alpine:latest] (sha256:d879607f7403c3a12b1d5b0bc8d39e609d41be55b4a49923d33b08e897ad56de) unused.
+Jul 06 13:45:19 tabdlab01 docker-garby[25623]: Image [alpine:3.3] (sha256:47cf20d8c26c46fff71be614d9f54997edacfe8d46d51769706e5aba94b16f2b) removed.
+Jul 06 13:45:19 tabdlab01 docker-garby[25614]: Image [alpine:3.3] (sha256:47cf20d8c26c46fff71be614d9f54997edacfe8d46d51769706e5aba94b16f2b) unused.
+Jul 06 13:45:19 tabdlab01 docker-garby[25605]: Image [cassandra:latest] (sha256:075b7d5e2ed5c2bc6ff6135d5864860fd494e191935276a3224de364be2cf5c2) removed.
+Jul 06 13:45:19 tabdlab01 docker-garby[25595]: Image [cassandra:latest] (sha256:075b7d5e2ed5c2bc6ff6135d5864860fd494e191935276a3224de364be2cf5c2) unused.
+Jul 06 13:45:19 tabdlab01 docker-garby[25586]: Image [nginx:latest] (sha256:0d409d33b27e47423b049f7f863faa08655a8c901749c2b25b93ca67d01a470d) excluded.
+Jul 06 13:45:19 tabdlab01 docker-garby[25573]: Image [] (sha256:8e5aaa829fbdf9c04a9793e5c0ccb6e999a3dd8ba3fb198f38732a022266ca96) excluded.
+Jul 06 13:45:18 tabdlab01 docker-garby[25550]: No containers found.
+Jul 06 13:44:42 tabdlab01 docker-garby[25137]: No dangling volumes found.
+Jul 06 13:44:41 tabdlab01 docker-garby[25126]: Image [nginx:latest] (sha256:0d409d33b27e47423b049f7f863faa08655a8c901749c2b25b93ca67d01a470d) excluded.
+Jul 06 13:44:41 tabdlab01 docker-garby[25113]: Image [] (sha256:8e5aaa829fbdf9c04a9793e5c0ccb6e999a3dd8ba3fb198f38732a022266ca96) excluded.
+Jul 06 13:44:41 tabdlab01 docker-garby[25090]: Container /compassionate_bose (ce534457da30) removed.
+Jul 06 13:44:41 tabdlab01 docker-garby[25081]: Container /compassionate_bose (ce534457da30) used image [].
+Jul 06 13:44:41 tabdlab01 docker-garby[25075]: Container /compassionate_bose (ce534457da30) finished 10701 seconds ago.
+Jul 06 13:44:41 tabdlab01 docker-garby[25042]: Container /jolly_allen (1492158818a3) removed.
+Jul 06 13:44:41 tabdlab01 docker-garby[25032]: Container /jolly_allen (1492158818a3) used image [konstruktoid/alpine:latest].
+Jul 06 13:44:41 tabdlab01 docker-garby[25026]: Container /jolly_allen (1492158818a3) finished 7509 seconds ago.
+Jul 06 13:44:41 tabdlab01 docker-garby[24993]: Container /sharp_jepsen (b86c0d5ab569) removed.
+Jul 06 13:44:41 tabdlab01 docker-garby[24984]: Container /sharp_jepsen (b86c0d5ab569) used image [konstruktoid/alpine:latest].
+Jul 06 13:44:41 tabdlab01 docker-garby[24978]: Container /sharp_jepsen (b86c0d5ab569) finished 7506 seconds ago.
 ```
 
 === Docker
 ```sh
 $ docker run --rm --read-only --tmpfs /tmp:rw,nosuid,nodev -v /var/run/docker.sock:/var/run/docker.sock konstruktoid/docker-garby
-[20160117145731] Image [apt-cacher-ng:latest] (sha256:16eb74bfa06aec356a004824543c5dd36997ad6a6f29fd6b05e38b5df0b8b1fa) unused.
-[20160117145731] Image [apt-cacher-ng:latest] (sha256:16eb74bfa06aec356a004824543c5dd36997ad6a6f29fd6b05e38b5df0b8b1fa) removed.
-[20160117145731] Image [konstruktoid/ubuntubuild:latest] (sha256:279da7ddfd8734ab8f321c92e73f17860a4c94937f5641ed0054424103479665) unused.
-[20160117145732] Image [konstruktoid/ubuntubuild:latest] (sha256:279da7ddfd8734ab8f321c92e73f17860a4c94937f5641ed0054424103479665) removed.
-[20160117145732] Image [konstruktoid/debianbuild:latest] (sha256:6345a2f8305ca45ed71042392701f758b2dae783a96b283f62de7dbd51b8995f) unused.
-[20160117145732] Image [konstruktoid/debianbuild:latest] (sha256:6345a2f8305ca45ed71042392701f758b2dae783a96b283f62de7dbd51b8995f) removed.
-[20160117145732] Image [konstruktoid/debian:wheezy] (sha256:9ad6d790d09a22be7b8fa0e8cfe36c35d7e6330b2f4e8239370b2df650299c45) unused.
-[20160117145732] Image [konstruktoid/debian:wheezy] (sha256:9ad6d790d09a22be7b8fa0e8cfe36c35d7e6330b2f4e8239370b2df650299c45) removed.
+[20160706141226] Container /silly_kilby6 (c2aa58249762) finished 3708 seconds ago.
+[20160706141226] Container /silly_kilby6 (c2aa58249762) used image [].
+[20160706141226] Container /silly_kilby6 (c2aa58249762) removed.
+[20160706141226] Container /elegant_lalande (ad385eee7dd8) finished 3737 seconds ago.
+[20160706141226] Container /elegant_lalande (ad385eee7dd8) used image [].
+[20160706141226] Container /elegant_lalande (ad385eee7dd8) removed.
+[20160706141226] Container /kickass_hoover (e053f8b2c3e6) finished 3759 seconds ago.
+[20160706141226] Container /kickass_hoover (e053f8b2c3e6) used image [konstruktoid/alpine:latest].
+[20160706141226] Container /kickass_hoover (e053f8b2c3e6) removed.
+[20160706141226] Image [konstruktoid/alpine:latest] (sha256:d879607f7403c3a12b1d5b0bc8d39e609d41be55b4a49923d33b08e897ad56de) excluded.
+[20160706141226] Image [nginx:latest] (sha256:0d409d33b27e47423b049f7f863faa08655a8c901749c2b25b93ca67d01a470d) excluded.
+[20160706141226] Image [] (sha256:16786a382fbb2334740de73eb0de534d760b281e0084a78802a076034e09aa72) unused.
+[20160706141226] Image [] (sha256:16786a382fbb2334740de73eb0de534d760b281e0084a78802a076034e09aa72) removed.
+[20160706141226] Image [alpine:3.3] (sha256:47cf20d8c26c46fff71be614d9f54997edacfe8d46d51769706e5aba94b16f2b) unused.
+[20160706141226] ERR: Image [alpine:3.3] (sha256:47cf20d8c26c46fff71be614d9f54997edacfe8d46d51769706e5aba94b16f2b) was not removed.
+[20160706141226] Image [] (sha256:83e46309df54bc729f68008d2bec6bcc272e1b5e2f3c6130731c0e8e525faf1c) unused.
+[20160706141226] Image [] (sha256:83e46309df54bc729f68008d2bec6bcc272e1b5e2f3c6130731c0e8e525faf1c) removed.
+[20160706141226] Image [] (sha256:e908192db440b9d621d89cd87f68bfd4e2e556785089da265d271454eb002c44) unused.
+[20160706141226] Image [] (sha256:e908192db440b9d621d89cd87f68bfd4e2e556785089da265d271454eb002c44) removed.
+[20160706141226] Image [] (sha256:ea4abdc85a28f70219a0d683c33f2438959f84dae3fe10ef5b964153a13fee33) unused.
+[20160706141226] Image [] (sha256:ea4abdc85a28f70219a0d683c33f2438959f84dae3fe10ef5b964153a13fee33) removed.
+[20160706141226] No dangling volumes found.
 ```
 
