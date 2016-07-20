@@ -1,8 +1,9 @@
 #!/bin/sh
 
-excludeImages="$(pwd)/docker-garby.exclude"
-logFile='syslog'
-maxSecondsOld=3600
+excludeImages=${excludeImages:="$(pwd)/docker-garby.exclude"}
+pullExcluded=${pullExcluded:=yes}
+logFile=${logFile:=syslog}
+maxSecondsOld=${maxSecondsOld:=3600}
 
 containerRemoval(){
   containerCount=$(docker ps --quiet --all | wc -l)
