@@ -167,6 +167,13 @@ volumeRemoval(){
   done
 }
 
+printConfig(){
+  logAllThings "excludeImages: $excludeImages"
+  logAllThings "pullExcluded: $pullExcluded"
+  logAllThings "logFile: $logFile"
+  logAllThings "maxSecondsOld: $maxSecondsOld"
+}
+
 removeTmpFiles(){
   rm "$allContainersLog"
   rm "$allImagesLog"
@@ -193,6 +200,7 @@ timeDiff(){
 }
 
 defineTmpFiles
+printConfig
 gatherBasicInfo
 containerRemoval
 imageRemoval
