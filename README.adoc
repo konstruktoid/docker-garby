@@ -5,7 +5,12 @@ image::http://www.dreamworkstv.com/wp-content/uploads/2015/05/DTX-character-GARB
 Just another Docker garbage collection script, written for Docker version 1.9 and later.
 
 == Configuration options
+The configuration options may be set in the script itself or at runtime. +
+`maxSecondsOld=600 pullExcluded=no sh docker-garby.sh` will remove a finished container older than 10 minutes
+and not pull excluded images. Excluded images are those you want to keep no matter what.
+
 `excludeImages="$(pwd)/docker-garby.exclude"` Exclude the images listed in this file. +
+`pullExcluded='yes'` Pull the latest version of the excluded images. +
 `logFile=''` Write to console. +
 `logFile='./docker-garby.log'` Write to a logfile, will be appended with `-$(date +%Y%m%d)`. +
 `logFile='syslog'` Write to syslog. +
@@ -15,8 +20,8 @@ Just another Docker garbage collection script, written for Docker version 1.9 an
 The file available to `excludeImages` above, should contain either the name and version or the sha256 digest. +
 ```sh
 $ cat docker-garby.exclude
-sha256:8e5aaa829fbdf9c04a9793e5c0ccb6e999a3dd8ba3fb198f38732a022266ca96
-nginx:latest
+sha256:47cf20d8c26c46fff71be614d9f54997edacfe8d46d51769706e5aba94b16f2b
+konstruktoid/nginx:latest
 ```
 
 == Examples
@@ -24,29 +29,46 @@ nginx:latest
 === Shell
 ```sh
 $ sh docker-garby.sh
-$ sudo journalctl SYSLOG_IDENTIFIER=docker-garby -r
--- Logs begin at Tue 2016-06-28 09:26:37 CEST, end at Wed 2016-07-06 13:45:20 CEST. --
-Jul 06 13:45:19 tabdlab01 docker-garby[25641]: Image [konstruktoid/alpine:latest] (sha256:d879607f7403c3a12b1d5b0bc8d39e609d41be55b4a49923d33b08e897ad56de) removed.
-Jul 06 13:45:19 tabdlab01 docker-garby[25632]: Image [konstruktoid/alpine:latest] (sha256:d879607f7403c3a12b1d5b0bc8d39e609d41be55b4a49923d33b08e897ad56de) unused.
-Jul 06 13:45:19 tabdlab01 docker-garby[25623]: Image [alpine:3.3] (sha256:47cf20d8c26c46fff71be614d9f54997edacfe8d46d51769706e5aba94b16f2b) removed.
-Jul 06 13:45:19 tabdlab01 docker-garby[25614]: Image [alpine:3.3] (sha256:47cf20d8c26c46fff71be614d9f54997edacfe8d46d51769706e5aba94b16f2b) unused.
-Jul 06 13:45:19 tabdlab01 docker-garby[25605]: Image [cassandra:latest] (sha256:075b7d5e2ed5c2bc6ff6135d5864860fd494e191935276a3224de364be2cf5c2) removed.
-Jul 06 13:45:19 tabdlab01 docker-garby[25595]: Image [cassandra:latest] (sha256:075b7d5e2ed5c2bc6ff6135d5864860fd494e191935276a3224de364be2cf5c2) unused.
-Jul 06 13:45:19 tabdlab01 docker-garby[25586]: Image [nginx:latest] (sha256:0d409d33b27e47423b049f7f863faa08655a8c901749c2b25b93ca67d01a470d) excluded.
-Jul 06 13:45:19 tabdlab01 docker-garby[25573]: Image [] (sha256:8e5aaa829fbdf9c04a9793e5c0ccb6e999a3dd8ba3fb198f38732a022266ca96) excluded.
-Jul 06 13:45:18 tabdlab01 docker-garby[25550]: No containers found.
-Jul 06 13:44:42 tabdlab01 docker-garby[25137]: No dangling volumes found.
-Jul 06 13:44:41 tabdlab01 docker-garby[25126]: Image [nginx:latest] (sha256:0d409d33b27e47423b049f7f863faa08655a8c901749c2b25b93ca67d01a470d) excluded.
-Jul 06 13:44:41 tabdlab01 docker-garby[25113]: Image [] (sha256:8e5aaa829fbdf9c04a9793e5c0ccb6e999a3dd8ba3fb198f38732a022266ca96) excluded.
-Jul 06 13:44:41 tabdlab01 docker-garby[25090]: Container /compassionate_bose (ce534457da30) removed.
-Jul 06 13:44:41 tabdlab01 docker-garby[25081]: Container /compassionate_bose (ce534457da30) used image [].
-Jul 06 13:44:41 tabdlab01 docker-garby[25075]: Container /compassionate_bose (ce534457da30) finished 10701 seconds ago.
-Jul 06 13:44:41 tabdlab01 docker-garby[25042]: Container /jolly_allen (1492158818a3) removed.
-Jul 06 13:44:41 tabdlab01 docker-garby[25032]: Container /jolly_allen (1492158818a3) used image [konstruktoid/alpine:latest].
-Jul 06 13:44:41 tabdlab01 docker-garby[25026]: Container /jolly_allen (1492158818a3) finished 7509 seconds ago.
-Jul 06 13:44:41 tabdlab01 docker-garby[24993]: Container /sharp_jepsen (b86c0d5ab569) removed.
-Jul 06 13:44:41 tabdlab01 docker-garby[24984]: Container /sharp_jepsen (b86c0d5ab569) used image [konstruktoid/alpine:latest].
-Jul 06 13:44:41 tabdlab01 docker-garby[24978]: Container /sharp_jepsen (b86c0d5ab569) finished 7506 seconds ago.
+$ sudo journalctl SYSLOG_IDENTIFIER=docker-garby
+-- Logs begin at Wed 2016-07-13 01:26:04 CEST, end at Wed 2016-07-20 09:30:45 CEST. --
+Jul 20 09:22:22 lab01 docker-garby[34525]: excludeImages: /home/tsj/Git/docker-garby/docker-garby.exclude
+Jul 20 09:22:22 lab01 docker-garby[34531]: pullExcluded: yes
+Jul 20 09:22:22 lab01 docker-garby[34537]: logFile: syslog
+Jul 20 09:22:22 lab01 docker-garby[34543]: maxSecondsOld: 3600
+Jul 20 09:22:22 lab01 docker-garby[34620]: Container /nostalgic_newton (08fd5995b8a1) finished 643403 seconds ago.
+Jul 20 09:22:22 lab01 docker-garby[34626]: Container /nostalgic_newton (08fd5995b8a1) used image [].
+Jul 20 09:22:22 lab01 docker-garby[34635]: Container /nostalgic_newton (08fd5995b8a1) removed.
+Jul 20 09:22:23 lab01 docker-garby[34671]: Container /angry_roentgen (f020fe7f8108) finished 643479 seconds ago.
+Jul 20 09:22:23 lab01 docker-garby[34677]: Container /angry_roentgen (f020fe7f8108) used image [].
+Jul 20 09:22:23 lab01 docker-garby[34686]: Container /angry_roentgen (f020fe7f8108) removed.
+Jul 20 09:22:23 lab01 docker-garby[34722]: Container /focused_kare (4c70871cae44) finished 643787 seconds ago.
+Jul 20 09:22:23 lab01 docker-garby[34728]: Container /focused_kare (4c70871cae44) used image [].
+Jul 20 09:22:23 lab01 docker-garby[34737]: Container /focused_kare (4c70871cae44) removed.
+Jul 20 09:22:25 lab01 docker-garby[35074]: Container /hopeful_yalow (92bd220166ac) finished 1762378 seconds ago.
+Jul 20 09:22:25 lab01 docker-garby[35080]: Container /hopeful_yalow (92bd220166ac) used image [konstruktoid/ubuntubuild:latest].
+Jul 20 09:22:25 lab01 docker-garby[35089]: Container /hopeful_yalow (92bd220166ac) removed.
+Jul 20 09:22:25 lab01 docker-garby[35124]: Container /desperate_lichterman (5614bd82697a) finished 1763270 seconds ago.
+Jul 20 09:22:25 lab01 docker-garby[35130]: Container /desperate_lichterman (5614bd82697a) used image [yak:latest].
+Jul 20 09:22:25 lab01 docker-garby[35139]: Container /desperate_lichterman (5614bd82697a) removed.
+Jul 20 09:22:25 lab01 docker-garby[35189]: Container /infallible_ptolemy (e6d0737e4f3e) removed.
+Jul 20 09:22:26 lab01 docker-garby[35225]: Container /drunk_euclid (e1dcc6a2dde2) finished 2112106 seconds ago.
+Jul 20 09:22:26 lab01 docker-garby[35231]: Container /drunk_euclid (e1dcc6a2dde2) used image [nginx:latest].
+Jul 20 09:22:26 lab01 docker-garby[35240]: Container /drunk_euclid (e1dcc6a2dde2) removed.
+Jul 20 09:22:26 lab01 docker-garby[35266]: Image [alpine:3.3] (sha256:47cf20d8c26c46fff71be614d9f54997edacfe8d46d51769706e5aba94b16f2b) excluded.
+Jul 20 09:22:33 lab01 docker-garby[35279]: Image [alpine:3.3] pulled.
+Jul 20 09:22:33 lab01 docker-garby[35292]: Image [konstruktoid/nginx:latest] (sha256:fa15a419f9005114cae823a5ab1b5c123cf729edcbd11e4dff4f4ed3b957595f) excluded.
+Jul 20 09:22:35 lab01 docker-garby[35304]: Image [konstruktoid/nginx:latest] pulled.
+Jul 20 09:23:04 lab01 docker-garby[35386]: Image [debian:8 debian:latest] (sha256:1b088884749bd93867ddb48ff404d4bbff09a17af8d95bc863efa5d133f87b78) unused.
+Jul 20 09:23:18 lab01 docker-garby[35395]: Image [debian:8 debian:latest] (sha256:1b088884749bd93867ddb48ff404d4bbff09a17af8d95bc863efa5d133f87b78) removed.
+Jul 20 09:23:18 lab01 docker-garby[35423]: Image [busybox:latest] (sha256:2b8fd9751c4c0f5dd266fcae00707e67a2545ef34f9a29354585f93dac906749) unused.
+Jul 20 09:23:19 lab01 docker-garby[35432]: Image [busybox:latest] (sha256:2b8fd9751c4c0f5dd266fcae00707e67a2545ef34f9a29354585f93dac906749) removed.
+Jul 20 09:23:19 lab01 docker-garby[35442]: Image [centos:6.6] (sha256:2c886f766286449b76ad90a7ce577b988e48fe5a3ed9a75c53fb81f783946831) unused.
+Jul 20 09:23:44 lab01 docker-garby[35452]: Image [centos:6.6] (sha256:2c886f766286449b76ad90a7ce577b988e48fe5a3ed9a75c53fb81f783946831) removed.
+Jul 20 09:23:44 lab01 docker-garby[35462]: Image [fedora:22] (sha256:2d3da2084d089bc8405d040807290e0dd9d2b7eba747046e42650eddb6209a39) unused.
+Jul 20 09:23:57 lab01 docker-garby[35472]: Image [fedora:22] (sha256:2d3da2084d089bc8405d040807290e0dd9d2b7eba747046e42650eddb6209a39) removed.
+Jul 20 09:24:03 lab01 docker-garby[35499]: Image [ubuntu:14.04] (sha256:38c759202e30c0d088367425a0252634c3b401e77d547d16ea25d2af6836224d) unused.
+Jul 20 09:24:22 lab01 docker-garby[35508]: Image [ubuntu:14.04] (sha256:38c759202e30c0d088367425a0252634c3b401e77d547d16ea25d2af6836224d) removed.
+
 ```
 
 === Docker
