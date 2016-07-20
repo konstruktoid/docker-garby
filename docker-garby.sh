@@ -36,7 +36,7 @@ containerRemoval(){
       remove=1
     fi
 
-    if [ "$timeDiffOutput" -gt $maxSecondsOld -a "$containerRunningState" = "false" ]; then
+    if [ "$timeDiffOutput" -gt "$maxSecondsOld" -a "$containerRunningState" = "false" ]; then
       logAllThings "Container $containerName ($con) finished $timeDiffOutput seconds ago."
       remove=1
     fi
@@ -101,6 +101,17 @@ imageRemoval(){
       imageName=$(docker inspect --format '{{.RepoTags}}' "$exclude")
       sed -i "/$keepImage/d" "$removeImagesLog"
       logAllThings "Image $imageName ($keepImage) excluded."
+
+      if [ "$pullExcluded" = 'yes' ]; then
+        pullImage=$(echo "$imageName" | sed -e 's/\[//g' -e 's/]//g')
+        docker pull "$pullImage" 2>/dev/null 1>&2
+        if [ "$?" -eq 0 ]; then
+          logAllThings "Image $imageName pulled."
+          else
+          logAllThings "Image $imageName was not pulled."
+        fi
+      fi
+
     done < "$excludeImages"
   fi
 
