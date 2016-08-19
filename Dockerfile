@@ -21,6 +21,5 @@ RUN apk update && \
     rm -rf /var/cache/apk/* docker-$VERSION.tgz docker-$VERSION.tgz.sha256
 
 COPY ./docker-garby.sh $WDIR/docker-garby.sh
-COPY ./docker-garby.exclude $WDIR/docker-garby.exclude
 
 ENTRYPOINT ["/bin/sh", "docker-garby.sh"]
