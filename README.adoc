@@ -24,6 +24,9 @@ sha256:47cf20d8c26c46fff71be614d9f54997edacfe8d46d51769706e5aba94b16f2b
 konstruktoid/nginx:latest
 ```
 
+=== Ansible
+An `docker-garby` Ansible playbook is available at https://github.com/konstruktoid/Ansible/tree/master/roles/docker-garby.
+
 == Examples
 
 === Shell
