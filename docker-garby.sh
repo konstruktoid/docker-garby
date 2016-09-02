@@ -26,17 +26,17 @@ containerRemoval(){
     echo "$containerImage" >> "$usedImagesLog"
     remove=0
 
-    if [ "$containerStatus" = "created" -a "$containerRunningState" = "false" ]; then
+    if [ "$containerStatus" = "created" ] && [ "$containerRunningState" = "false" ]; then
       logAllThings "Container $containerName ($con) is in 'created' state."
       remove=1
     fi
 
-    if [ "$containerDead" = "true" -a "$containerRunningState" = "false" ]; then
+    if [ "$containerDead" = "true" ] && [ "$containerRunningState" = "false" ]; then
       logAllThings "Container $containerName ($con) is in 'dead' state."
       remove=1
     fi
 
-    if [ "$timeDiffOutput" -gt "$maxSecondsOld" -a "$containerRunningState" = "false" ]; then
+    if [ "$timeDiffOutput" -gt "$maxSecondsOld" ] && [ "$containerRunningState" = "false" ]; then
       logAllThings "Container $containerName ($con) finished $timeDiffOutput seconds ago."
       remove=1
     fi
@@ -95,7 +95,7 @@ imageRemoval(){
   comm -23 "$allImagesTmpLog" "$usedImagesTmpLog" > "$removeImagesLog"
 
   if [ -f "$excludeImages" ]; then
-    while read exclude
+    while read -r exclude
     do
       keepImage=$(docker inspect --format '{{.Id}}' "$exclude")
       imageName=$(docker inspect --format '{{.RepoTags}}' "$exclude")
@@ -115,7 +115,7 @@ imageRemoval(){
     done < "$excludeImages"
   fi
 
-  while read line
+  while read -r line
   do
     imageName=$(docker inspect --format '{{.RepoTags}}' "$line")
     logAllThings "Image $imageName ($line) unused."
