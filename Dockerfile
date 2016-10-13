@@ -1,6 +1,6 @@
 FROM konstruktoid/alpine:latest
 
-LABEL org.label-schema.name="docker-garby"
+LABEL org.label-schema.name="docker-garby" \
       org.label-schema.vcs-url="git@github.com:konstruktoid/docker-garby.git"
 
 ENV VERSION 1.12.1
