@@ -192,12 +192,13 @@ volumeRemoval(){
 }
 
 printConfig(){
+  logAllThings "clientVersion: $clientVersion"
+  logAllThings "dockerPrune: $dockerPrune"
   logAllThings "excludeImages: $excludeImages"
-  logAllThings "pullExcluded: $pullExcluded"
   logAllThings "logFile: $logFile"
   logAllThings "maxSecondsOld: $maxSecondsOld"
-  logAllThings "dockerPrune: $dockerPrune"
-  logAllThings "dockerVersion: $dockerVersion"
+  logAllThings "pullExcluded: $pullExcluded"
+  logAllThings "serverVersion: $serverVersion"
 }
 
 removeTmpFiles(){
