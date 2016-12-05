@@ -161,6 +161,13 @@ logAllThings(){
   fi
 }
 
+networkRemoval(){
+  if [ "$dockerVersion" -ge 1130 ] && [ "$networkPrune" = 'yes' ]; then
+    logAllThings "Using docker network prune"
+    docker network prune -f
+  fi
+}
+
 volumeRemoval(){
   volumeCount=$(docker volume ls --quiet --filter "dangling=true" | wc -l)
 
@@ -222,4 +229,5 @@ gatherBasicInfo
 containerRemoval
 imageRemoval
 volumeRemoval
+networkRemoval
 removeTmpFiles
