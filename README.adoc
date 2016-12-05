@@ -14,7 +14,7 @@ and not pull excluded images. Excluded images are those you want to keep no matt
 `logFile=''` Write to console. +
 `logFile='./docker-garby.log'` Write to a logfile, will be appended with `-$(date +%Y%m%d)`. +
 `logFile='syslog'` Write to syslog. +
-`maxSecondsOld=3600` How old a container has to be in seconds before removing it.
+`maxSecondsOld=3600` How old a container has to be in seconds before removing it. +
 `dockerPrune='no'` If you want to use the internal Docker prune option, negates `maxSecondsOld`.
 
 === Excluding images
