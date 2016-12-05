@@ -3,8 +3,8 @@ FROM konstruktoid/alpine:latest
 LABEL org.label-schema.name="docker-garby" \
       org.label-schema.vcs-url="git@github.com:konstruktoid/docker-garby.git"
 
-ENV VERSION 1.12.1
-ENV SHA256 05ceec7fd937e1416e5dce12b0b6e1c655907d349d52574319a1e875077ccb79
+ENV VERSION 1.12.3
+ENV SHA256 626601deb41d9706ac98da23f673af6c0d4631c4d194a677a9a1a07d7219fa0f
 
 ENV WDIR /usr/bin
 WORKDIR ${WDIR}
