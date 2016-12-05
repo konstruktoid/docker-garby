@@ -26,7 +26,7 @@ konstruktoid/nginx:latest
 ```
 
 === Ansible
-An `docker-garby` Ansible playbook is available at https://github.com/konstruktoid/Ansible/tree/master/roles/docker-garby.
+An `docker-garby` Ansible playbook is available at https://github.com/konstruktoid/Ansible/blob/master/roles/docker-garby_container/tasks/docker-garby.yml[konstruktoid/Ansible].
 
 == Examples
 
