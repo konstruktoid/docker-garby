@@ -4,12 +4,20 @@ excludeImages=${excludeImages:="$(pwd)/docker-garby.exclude"}
 pullExcluded=${pullExcluded:=yes}
 logFile=${logFile:=syslog}
 maxSecondsOld=${maxSecondsOld:=3600}
+dockerVersion=$(docker version --format '{{ .Server.Version }}' | sed -e 's/-.*//g' -e 's/\.//g')
+dockerPrune=${dockerPrune:=no}
 
 containerRemoval(){
   containerCount=$(docker ps --quiet --all | wc -l)
 
   if [ "$containerCount" -lt 1 ]; then
     logAllThings "No containers found."
+    return
+  fi
+
+  if [ "$dockerVersion" -ge 1130 ] && [ "$dockerPrune" = 'yes' ]; then
+    logAllThings "Using docker container prune"
+    docker container prune -f
     return
   fi
 
@@ -86,6 +94,12 @@ imageRemoval(){
 
   if [ "$imageCount" -lt 1 ]; then
     logAllThings "No images found."
+    return
+  fi
+
+  if [ "$dockerVersion" -ge 1130 ] && [ "$dockerPrune" = 'yes' ]; then
+    logAllThings "Using docker system prune"
+    docker system prune -a -f
     return
   fi
 
@@ -172,6 +186,8 @@ printConfig(){
   logAllThings "pullExcluded: $pullExcluded"
   logAllThings "logFile: $logFile"
   logAllThings "maxSecondsOld: $maxSecondsOld"
+  logAllThings "dockerPrune: $dockerPrune"
+  logAllThings "dockerVersion: $dockerVersion"
 }
 
 removeTmpFiles(){
