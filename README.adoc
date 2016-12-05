@@ -15,6 +15,7 @@ and not pull excluded images. Excluded images are those you want to keep no matt
 `logFile='./docker-garby.log'` Write to a logfile, will be appended with `-$(date +%Y%m%d)`. +
 `logFile='syslog'` Write to syslog. +
 `maxSecondsOld=3600` How old a container has to be in seconds before removing it.
+`dockerPrune='no'` If you want to use the internal Docker prune option, negates `maxSecondsOld`.
 
 === Excluding images
 The file available to `excludeImages` above, should contain either the name and version or the sha256 digest. +
@@ -30,6 +31,29 @@ An `docker-garby` Ansible playbook is available at https://github.com/konstrukto
 == Examples
 
 === Shell
+
+```sh
+$ dockerPrune=yes sh docker-garby.sh
+Deleted Containers:
+a2209b39ffdfbd305e1a940c2cced53aa4217f858508041015dcefcea9dc2a64
+550f1d001178d76d0a1fd4f0015aeb41f053fbadc291ec04996473f63778381f
+47a31c8b183d826b4608156666223e641f2d32628adb85380e3d4b622d18c22d
+8a21af9adc7c8b0432be3749e1073f55085a3161f233e5354098b1de56ffee78
+6dd02a7762927470228ab76046e70f7df1060b4bfbcdf74ad129f809cec53e27
+
+Total reclaimed space: 0 B
+Deleted Images:
+untagged: konstruktoid/privoxy:latest
+untagged: konstruktoid/privoxy@sha256:0adaa06fffe2f7cdc80ad53e5ed62337fda54027f6fff5005d348c5f5d16818d
+deleted: sha256:f4c8c0d866b641abc09825f2cfbf01d272cf4252ac21bca1009b4f041158f0c1
+deleted: sha256:38548bee69829edec5a71dd5f2bd85878683977b2a9ef542061202d307ece4ca
+deleted: sha256:0e0484753b293b8362ce8a91aee3cf201a6d9b1b7bac94f1b4f6dba2db14540c
+deleted: sha256:a0e90e7c7eefc1ed0501f89ac9c6ac405a166be36214fa1ce0e3803177045f49
+deleted: sha256:22b4595ae3d4e328621c70ef8dda5a9277f8404ee9b326a4ec78758b0e258de2
+
+Total reclaimed space: 1.875 MB
+```
+
 ```sh
 $ sh docker-garby.sh
 $ sudo journalctl SYSLOG_IDENTIFIER=docker-garby
@@ -71,7 +95,6 @@ Jul 20 09:23:44 lab01 docker-garby[35462]: Image [fedora:22] (sha256:2d3da2084d0
 Jul 20 09:23:57 lab01 docker-garby[35472]: Image [fedora:22] (sha256:2d3da2084d089bc8405d040807290e0dd9d2b7eba747046e42650eddb6209a39) removed.
 Jul 20 09:24:03 lab01 docker-garby[35499]: Image [ubuntu:14.04] (sha256:38c759202e30c0d088367425a0252634c3b401e77d547d16ea25d2af6836224d) unused.
 Jul 20 09:24:22 lab01 docker-garby[35508]: Image [ubuntu:14.04] (sha256:38c759202e30c0d088367425a0252634c3b401e77d547d16ea25d2af6836224d) removed.
-
 ```
 
 === Docker
