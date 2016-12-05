@@ -1,11 +1,12 @@
 #!/bin/sh
 
+dockerPrune=${dockerPrune:=no}
+dockerVersion=$(docker version --format '{{ .Server.Version }}' | sed -e 's/-.*//g' -e 's/\.//g')
 excludeImages=${excludeImages:="$(pwd)/docker-garby.exclude"}
-pullExcluded=${pullExcluded:=yes}
 logFile=${logFile:=syslog}
 maxSecondsOld=${maxSecondsOld:=3600}
-dockerVersion=$(docker version --format '{{ .Server.Version }}' | sed -e 's/-.*//g' -e 's/\.//g')
-dockerPrune=${dockerPrune:=no}
+networkPrune=${networkPrune:=yes}
+pullExcluded=${pullExcluded:=yes}
 
 containerRemoval(){
   containerCount=$(docker ps --quiet --all | wc -l)
