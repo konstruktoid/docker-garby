@@ -9,13 +9,13 @@ The configuration options may be set in the script itself or at runtime. +
 `maxSecondsOld=600 pullExcluded=no sh docker-garby.sh` will remove a finished container older than 10 minutes
 and not pull excluded images. Excluded images are those you want to keep no matter what.
 
-`dockerPrune=${dockerPrune:=no}` If you want to use the internal Docker prune option, negates `maxSecondsOld`. +
+`dockerPrune=${dockerPrune:=no}` If you want to use the internal prune option, available in Docker 1.13. Negates `maxSecondsOld` and `excludeImages`. +
 `excludeImages=${excludeImages:="$(pwd)/docker-garby.exclude"}` Exclude the images listed in this file. +
 `logFile=''` Write to console. +
 `logFile='./docker-garby.log'` Write to a logfile, will be appended with `-$(date +%Y%m%d)`. +
-`logFile='syslog'` Write to syslog. +
+`logFile='syslog'` Write to syslog. This is the default. +
 `maxSecondsOld=${maxSecondsOld:=3600}` How old a container has to be in seconds before removing it. +
-`networkPrune=${networkPrune:=yes}` Remove unused networks using the internal Docker prune option. +
+`networkPrune=${networkPrune:=yes}` Remove unused networks using the internal prune option, available in Docker 1.13. +
 `pullExcluded=${pullExcluded:=yes}` Pull the latest version of the excluded images.
 
 === Excluding images
