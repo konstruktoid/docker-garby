@@ -21,7 +21,7 @@ containerRemoval(){
   fi
 
   if [ "$clientVersion" -ge 1130 ] && [ "$dockerPrune" = 'yes' ]; then
-    logAllThings "Using docker container prune"
+    logAllThings "Using docker container prune."
     docker container prune -f
     return
   fi
@@ -103,7 +103,7 @@ imageRemoval(){
   fi
 
   if [ "$clientVersion" -ge 1130 ] && [ "$dockerPrune" = 'yes' ]; then
-    logAllThings "Using docker system prune"
+    logAllThings "Using docker system prune."
     docker system prune -a -f
     return
   fi
@@ -167,7 +167,7 @@ logAllThings(){
 
 networkRemoval(){
   if [ "$clientVersion" -ge 1130 ] && [ "$networkPrune" = 'yes' ]; then
-    logAllThings "Using docker network prune"
+    logAllThings "Using docker network prune."
     docker network prune -f
   fi
 }
