@@ -2,24 +2,48 @@
 
 image::http://www.dreamworkstv.com/wp-content/uploads/2015/05/DTX-character-GARBY.jpg[Dinotrux character Garby]
 
-Just another Docker garbage collection script, written for Docker version 1.9 and later.
+Just another Docker garbage collection script, written for Docker version 1.9
+and later.
+
+== Running docker-garby
+You can either run `docker-garby` as a shell script on systems using GNU
+coreutils or in a link:Dockerfile[Docker container]. By default it will clean
+non-running containers that has been inactive for more than one hour, images,
+volumes and, if you're using Docker 1.13 or later, unused networks.
+
+Due to differences between BSD and GNU coreutils it is recommended that you
+run `docker-garby` in a container if you're using macOS/Mac OS X, or
+install the `coreutils` and `binutils` packages using http://brew.sh/[Homebrew].
 
 == Configuration options
 The configuration options may be set in the script itself or at runtime. +
-`maxSecondsOld=600 pullExcluded=no sh docker-garby.sh` will remove a finished container older than 10 minutes
-and not pull excluded images. Excluded images are those you want to keep no matter what.
+`maxSecondsOld=600 pullExcluded=no sh docker-garby.sh` will remove a finished
+container older than 10 minutes and not pull excluded images. Excluded images
+are those you want to keep no matter what.
 
-`dockerPrune=${dockerPrune:=no}` If you want to use the internal prune option, available in Docker 1.13. Negates `maxSecondsOld` and `excludeImages`. +
-`excludeImages=${excludeImages:="$(pwd)/docker-garby.exclude"}` Exclude the images listed in this file. +
-`logFile=''` Write to console. +
-`logFile='./docker-garby.log'` Write to a logfile, will be appended with `-$(date +%Y%m%d)`. +
-`logFile='syslog'` Write to syslog. This is the default. +
-`maxSecondsOld=${maxSecondsOld:=3600}` How old a container has to be in seconds before removing it. +
-`networkPrune=${networkPrune:=yes}` Remove unused networks using the internal prune option, available in Docker 1.13. +
-`pullExcluded=${pullExcluded:=yes}` Pull the latest version of the excluded images.
+[source]
+----
+dockerPrune=${dockerPrune:=no} # <1>
+excludeImages=${excludeImages:="$(pwd)/docker-garby.exclude"} # <2>
+logFile='syslog' # <3>
+maxSecondsOld=${maxSecondsOld:=3600} # <4>
+networkPrune=${networkPrune:=yes} # <5>
+pullExcluded=${pullExcluded:=yes} # <6>
+----
+
+<1> If you want to use the internal prune option, available in Docker 1.13.
+Negates `maxSecondsOld` and `excludeImages`.
+<2> Exclude the images listed in this file.
+<3> Write to syslog. `logFile='./docker-garby.log'` will write to a logfile,
+and the file name will be appended with `-$(date +%Y%m%d)`.
+<4> How old a container has to be in seconds before removing it.
+<5> Remove unused networks using the internal prune option, available in Docker 1.13.
+<6> Pull the latest version of the excluded images.
+
 
 === Excluding images
-The file available to `excludeImages` above, should contain either the name and version or the sha256 digest. +
+The file available to `excludeImages` above, should contain either the name
+and version or the sha256 digest.
 ```sh
 $ cat docker-garby.exclude
 sha256:47cf20d8c26c46fff71be614d9f54997edacfe8d46d51769706e5aba94b16f2b
