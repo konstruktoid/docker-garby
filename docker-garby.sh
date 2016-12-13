@@ -7,8 +7,10 @@ maxSecondsOld=${maxSecondsOld:=3600}
 networkPrune=${networkPrune:=yes}
 pullExcluded=${pullExcluded:=yes}
 
-serverVersion=$(docker version --format '{{ .Server.Version }}' | sed -e 's/-.*//g' -e 's/\.//g')
-clientVersion=$(docker version --format '{{ .Client.Version }}' | sed -e 's/-.*//g' -e 's/\.//g')
+getVersions(){
+  serverVersion=$(docker version --format '{{ .Server.Version }}' | sed -e 's/-.*//g' -e 's/\.//g')
+  clientVersion=$(docker version --format '{{ .Client.Version }}' | sed -e 's/-.*//g' -e 's/\.//g')
+}
 
 containerRemoval(){
   containerCount=$(docker ps --quiet --all | wc -l)
@@ -210,6 +212,13 @@ removeTmpFiles(){
   rm "$usedImagesTmpLog"
 }
 
+testDocker(){
+  if ! docker ps -a 2>/dev/null 1>&2; then
+    echo "Is Docker installed?"
+    exit 1
+  fi
+}
+
 timeDiff(){
   containerTime="$(echo "$1" | sed -e 's/ +.*/Z/' -e 's/ /T/')"
   dateEpoch=$(LC_ALL=C date -u +%s)
@@ -226,6 +235,8 @@ timeDiff(){
   echo "$timeDiffSeconds"
 }
 
+testDocker
+getVersions
 defineTmpFiles
 printConfig
 gatherBasicInfo
