@@ -69,6 +69,7 @@ containerRemoval(){
 }
 
 defineTmpFiles(){
+  TMP=${TMPDIR:-$TMP}
   if [ -z "$TMP" ]; then
     export TMP='/tmp'
   fi
