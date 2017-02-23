@@ -1,7 +1,8 @@
 FROM konstruktoid/alpine:latest
 
 LABEL org.label-schema.name="docker-garby" \
-      org.label-schema.vcs-url="git@github.com:konstruktoid/docker-garby.git"
+      org.label-schema.url="https://github.com/konstruktoid/docker-garby" \
+      org.label-schema.vcs-url="https://github.com/konstruktoid/docker-garby.git"
 
 ENV VERSION 1.12.6
 ENV SHA256 cadc6025c841e034506703a06cf54204e51d0cadfae4bae62628ac648d82efdd
