@@ -4,8 +4,8 @@ LABEL org.label-schema.name="docker-garby" \
       org.label-schema.url="https://github.com/konstruktoid/docker-garby" \
       org.label-schema.vcs-url="https://github.com/konstruktoid/docker-garby.git"
 
-ENV VERSION 1.12.6
-ENV SHA256 cadc6025c841e034506703a06cf54204e51d0cadfae4bae62628ac648d82efdd
+ENV VERSION 17.04.0-ce
+ENV SHA256 c52cff62c4368a978b52e3d03819054d87bcd00d15514934ce2e0e09b99dd100
 
 ENV WDIR /usr/bin
 WORKDIR ${WDIR}
