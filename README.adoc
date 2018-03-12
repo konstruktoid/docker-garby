@@ -149,3 +149,6 @@ $ docker run --rm --read-only --tmpfs /tmp:rw,nosuid,nodev -v /var/run/docker.so
 [20160706141226] No dangling volumes found.
 ```
 
+== Contributing
+Found a bug? Does the script need some improvements?
+Please create an issue or pull request.
