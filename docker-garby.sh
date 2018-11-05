@@ -57,8 +57,7 @@ containerRemoval(){
     if [ "$remove" = 1 ]; then
       logAllThings "Container $containerName ($con) used image $imageName."
 
-      docker rm --volumes "$con" 2>/dev/null 1>&2
-      if [ "$?" -eq 0 ]; then
+      if docker rm --volumes "$con" 2>/dev/null 1>&2; then
         logAllThings "Container $containerName ($con) removed."
       else
         logAllThings "ERR: Container $containerName ($con) was not removed."
@@ -124,10 +123,9 @@ imageRemoval(){
 
       if [ "$pullExcluded" = 'yes' ]; then
         pullImage=$(echo "$imageName" | sed -e 's/\[//g' -e 's/]//g')
-        docker pull "$pullImage" 2>/dev/null 1>&2
-        if [ "$?" -eq 0 ]; then
+        if docker pull "$pullImage" 2>/dev/null 1>&2; then
           logAllThings "Image $imageName pulled."
-          else
+        else
           logAllThings "Image $imageName was not pulled."
         fi
       fi
@@ -139,11 +137,10 @@ imageRemoval(){
   do
     imageName=$(docker inspect --format '{{.RepoTags}}' "$line")
     logAllThings "Image $imageName ($line) unused."
-    docker rmi -f "$line" 2>/dev/null 1>&2
 
-    if [ "$?" -eq 0 ]; then
+    if docker rmi -f "$line" 2>/dev/null 1>&2; then
       logAllThings "Image $imageName ($line) removed."
-      else
+    else
       logAllThings "ERR: Image $imageName ($line) was not removed."
     fi
     done < "$removeImagesLog"
@@ -186,11 +183,9 @@ volumeRemoval(){
   for vol in $(docker volume ls --quiet); do
     mountPoint=$(docker volume inspect --format '{{.Mountpoint}}' "$vol")
     logAllThings "Volume $mountPoint unused."
-    docker volume rm "$vol" 2>/dev/null 1>&2
-
-    if [ "$?" -eq 0 ]; then
+    if docker volume rm "$vol" 2>/dev/null 1>&2; then
       logAllThings "Volume $mountPoint removed."
-      else
+    else
       logAllThings "ERR: Volume $mountPoint was not removed."
     fi
   done
@@ -230,7 +225,7 @@ timeDiff(){
   if [ "$convertToEpoch" -lt 0 ]; then
     # this is negative, which means no exit state"
     containerEpoch="$dateEpoch"
-    else
+  else
     containerEpoch="$convertToEpoch"
   fi
 

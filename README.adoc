@@ -5,6 +5,12 @@ image::http://www.dreamworkstv.com/wp-content/uploads/2015/05/DTX-character-GARB
 Just another Docker garbage collection script, written for Docker version 1.9
 and later.
 
+== Docker version post-2017
+
+You should be using a Docker version released later than 2017 with the
+https://docs.docker.com/config/pruning/[docker prune] command available.
+If you don't need to exclude containers or images, use that instead.
+
 == Running docker-garby
 You can either run `docker-garby` as a shell script on systems using GNU
 coreutils or in a link:Dockerfile[Docker container]. By default it will clean
