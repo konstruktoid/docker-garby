@@ -1,6 +1,9 @@
 #!/bin/sh
+# shellcheck disable=2086
+# shellcheck disable=2046
 
 dockerPrune=${dockerPrune:=no}
+pruneOptions=${pruneOptions}
 excludeImages=${excludeImages:="$(pwd)/docker-garby.exclude"}
 logFile=${logFile:=syslog}
 maxSecondsOld=${maxSecondsOld:=3600}
@@ -22,7 +25,11 @@ containerRemoval(){
 
   if [ "$clientVersion" -ge 1130 ] && [ "$dockerPrune" = 'yes' ]; then
     logAllThings "Using docker container prune."
-    docker container prune -f
+    if [ "$clientVersion" -ge 1704 ]; then
+      docker container prune --force $pruneOptions
+    else
+      docker container prune --force
+    fi
     return
   fi
 
@@ -104,7 +111,11 @@ imageRemoval(){
 
   if [ "$clientVersion" -ge 1130 ] && [ "$dockerPrune" = 'yes' ]; then
     logAllThings "Using docker system prune."
-    docker system prune -a -f
+    if [ "$clientVersion" -ge 1704 ]; then
+      docker system prune --force $pruneOptions
+    else
+      docker system prune --force
+    fi
     return
   fi
 
@@ -186,7 +197,11 @@ logAllThings(){
 networkRemoval(){
   if [ "$clientVersion" -ge 1130 ] && [ "$networkPrune" = 'yes' ]; then
     logAllThings "Using docker network prune."
-    docker network prune -f
+    if [ "$clientVersion" -ge 1704 ]; then
+      docker network prune --force $pruneOptions
+    else
+      docker network prune --force
+    fi
   fi
 }
 
@@ -212,6 +227,7 @@ volumeRemoval(){
 printConfig(){
   logAllThings "clientVersion: $clientVersion"
   logAllThings "dockerPrune: $dockerPrune"
+  logAllThings "pruneOptions: $pruneOptions"
   logAllThings "excludeImages: $excludeImages"
   logAllThings "logFile: $logFile"
   logAllThings "maxSecondsOld: $maxSecondsOld"
