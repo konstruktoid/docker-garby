@@ -30,26 +30,31 @@ are those you want to keep no matter what.
 [source]
 ----
 dockerPrune=${dockerPrune:=no} # <1>
-excludeImages=${excludeImages:="$(pwd)/docker-garby.exclude"} # <2>
-logFile='syslog' # <3>
-maxSecondsOld=${maxSecondsOld:=3600} # <4>
-networkPrune=${networkPrune:=yes} # <5>
-pullExcluded=${pullExcluded:=yes} # <6>
+pruneOptions=${pruneOptions} # <2>
+excludeImages=${excludeImages:="$(pwd)/docker-garby.exclude"} # <3>
+logFile='syslog' # <4>
+maxSecondsOld=${maxSecondsOld:=3600} # <5>
+networkPrune=${networkPrune:=yes} # <6>
+pullExcluded=${pullExcluded:=yes} # <7>
 ----
 
 <1> If you want to use the internal prune option, available in Docker 1.13.
 Negates `maxSecondsOld` and `excludeImages`.
-<2> Exclude the images listed in this file.
-<3> Write to syslog. `logFile='./docker-garby.log'` will write to a logfile,
+<2> Configure `docker {container|system|network} prune` options,
+if Docker 17.04 or later.
+<3> Exclude the images listed in this file.
+<4> Write to syslog. `logFile='./docker-garby.log'` will write to a logfile,
 and the file name will be appended with `-$(date +%Y%m%d)`.
-<4> How old a container has to be in seconds before removing it.
-<5> Remove unused networks using the internal prune option, available in Docker 1.13.
-<6> Pull the latest version of the excluded images.
+<5> How old a container has to be in seconds before removing it.
+<6> Remove unused networks using the internal prune option, available in
+Docker 1.13.
+<7> Pull the latest version of the excluded images.
 
 
 === Excluding images
 The file available to `excludeImages` above, should contain either the name
-and version, a label (starting with `label:`) or the SHA256 digest (starting with `sha256:`).
+and version, a label (starting with `label:`) or the SHA256 digest
+(starting with `sha256:`).
 ```sh
 $ cat docker-garby.exclude
 sha256:47cf20d8c26c46fff71be614d9f54997edacfe8d46d51769706e5aba94b16f2b
@@ -63,6 +68,30 @@ An `docker-garby` Ansible playbook is available at https://github.com/konstrukto
 == Examples
 
 === Shell
+
+```sh
+$ dockerPrune=yes pruneOptions="--filter until=1m" sh docker-garby.sh
+Deleted Containers:
+8b8dfbad1a37b4fabcfa892974f5a255a6aaa8cef921cc323d637f35919d61e1
+
+Total reclaimed space: 0B
+Total reclaimed space: 0B
+
+$ sudo journalctl SYSLOG_IDENTIFIER=docker-garby
+...
+Feb 10 14:21:49 lab01 docker-garby[3484]: clientVersion: 18061
+Feb 10 14:21:49 lab01 docker-garby[3492]: dockerPrune: yes
+Feb 10 14:21:49 lab01 docker-garby[3500]: pruneOptions: --filter until=1m
+Feb 10 14:21:49 lab01 docker-garby[3508]: excludeImages: /home/vagrant/vagrant/docker-garby.exclude
+Feb 10 14:21:49 lab01 docker-garby[3516]: logFile: syslog
+Feb 10 14:21:49 lab01 docker-garby[3524]: maxSecondsOld: 3600
+Feb 10 14:21:49 lab01 docker-garby[3532]: pullExcluded: yes
+Feb 10 14:21:49 lab01 docker-garby[3540]: serverVersion: 18061
+Feb 10 14:21:49 lab01 docker-garby[3573]: Using docker container prune.
+Feb 10 14:21:49 lab01 docker-garby[3602]: Using docker system prune.
+Feb 10 14:21:49 lab01 docker-garby[3627]: No dangling volumes found.
+Feb 10 14:21:49 lab01 docker-garby[3635]: Using docker network prune.
+```
 
 ```sh
 $ dockerPrune=yes sh docker-garby.sh
