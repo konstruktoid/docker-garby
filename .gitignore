@@ -1,1 +1,3 @@
 docker-garby.log*
+*.log
+*.exclude
