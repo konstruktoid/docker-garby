@@ -114,27 +114,45 @@ imageRemoval(){
   comm -23 "$allImagesTmpLog" "$usedImagesTmpLog" > "$removeImagesLog"
 
   if [ -f "$excludeImages" ]; then
-    while read -r exclude
-    do
-      keepImage=$(docker inspect --format '{{.Id}}' "$exclude")
-      imageName=$(docker inspect --format '{{.RepoTags}}' "$exclude")
-      sed -i "/$keepImage/d" "$removeImagesLog"
-      logAllThings "Image $imageName ($keepImage) excluded."
+    grep -v '^#' "$excludeImages" | while read -r exclude; do
+      if echo "$exclude" | grep -i '^label:' 2>/dev/null 1>&2; then
+        echo "$exclude" | grep -i '^label:' | sed 's/^label://g' | while read -r label; do
+          keepLabel=$(docker inspect --format '{{.Id}}{{.ContainerConfig.Labels}}' $(docker images -qa) | grep -i "$label" | sed 's/map\[.*//g')
+          labelName=$(docker inspect --format '{{.RepoTags}}' "$keepLabel")
+          sed -i "/$keepLabel/d" "$removeImagesLog"
+          logAllThings "Image $labelName ($keepLabel) excluded."
 
-      if [ "$pullExcluded" = 'yes' ]; then
-        pullImage=$(echo "$imageName" | sed -e 's/\[//g' -e 's/]//g')
-        if docker pull "$pullImage" 2>/dev/null 1>&2; then
-          logAllThings "Image $imageName pulled."
-        else
-          logAllThings "Image $imageName was not pulled."
-        fi
+          if [ "$pullExcluded" = 'yes' ]; then
+            pullLabel=$(echo "$labelName" | sed -e 's/\[//g' -e 's/]//g')
+            if docker pull "$pullLabel" 2>/dev/null 1>&2; then
+              logAllThings "Image $labelName pulled."
+            else
+              logAllThings "Image $labelName was not pulled."
+            fi
+          fi
+        done
       fi
 
-    done < "$excludeImages"
+      exclude=$(echo "$exclude" | grep -v '^label')
+      if [ -n "$exclude" ]; then
+        keepImage=$(docker inspect --format '{{.Id}}' "$exclude")
+        imageName=$(docker inspect --format '{{.RepoTags}}' "$exclude")
+        sed -i "/$keepImage/d" "$removeImagesLog"
+        logAllThings "Image $imageName ($keepImage) excluded."
+
+        if [ "$pullExcluded" = 'yes' ]; then
+          pullImage=$(echo "$imageName" | sed -e 's/\[//g' -e 's/]//g')
+          if docker pull "$pullImage" 2>/dev/null 1>&2; then
+            logAllThings "Image $imageName pulled."
+          else
+            logAllThings "Image $imageName was not pulled."
+          fi
+        fi
+      fi
+    done
   fi
 
-  while read -r line
-  do
+  grep -vE '^label|^#' "$removeImagesLog" | while read -r line; do
     imageName=$(docker inspect --format '{{.RepoTags}}' "$line")
     logAllThings "Image $imageName ($line) unused."
 
@@ -143,7 +161,7 @@ imageRemoval(){
     else
       logAllThings "ERR: Image $imageName ($line) was not removed."
     fi
-    done < "$removeImagesLog"
+  done
 }
 
 logAllThings(){
