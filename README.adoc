@@ -49,11 +49,12 @@ and the file name will be appended with `-$(date +%Y%m%d)`.
 
 === Excluding images
 The file available to `excludeImages` above, should contain either the name
-and version or the sha256 digest.
+and version, a label (starting with `label:`) or the SHA256 digest (starting with `sha256:`).
 ```sh
 $ cat docker-garby.exclude
 sha256:47cf20d8c26c46fff71be614d9f54997edacfe8d46d51769706e5aba94b16f2b
 konstruktoid/nginx:latest
+label:konstruktoid
 ```
 
 === Ansible
@@ -130,6 +131,7 @@ Jul 20 09:24:22 lab01 docker-garby[35508]: Image [ubuntu:14.04] (sha256:38c75920
 
 === Docker
 ```sh
+$ docker build --no-cache --tag konstruktoid/docker-garby -f Dockerfile .
 $ docker run --rm --read-only --tmpfs /tmp:rw,nosuid,nodev -v /var/run/docker.sock:/var/run/docker.sock konstruktoid/docker-garby
 [20160706141226] Container /silly_kilby6 (c2aa58249762) finished 3708 seconds ago.
 [20160706141226] Container /silly_kilby6 (c2aa58249762) used image [].
