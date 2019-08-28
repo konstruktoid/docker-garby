@@ -187,5 +187,8 @@ $ docker run --rm --read-only --tmpfs /tmp:rw,nosuid,nodev -v /var/run/docker.so
 ```
 
 == Contributing
-Found a bug? Does the script need some improvements?
-Please create an issue or pull request.
+Do you want to contribute? That's great! Contributions are always welcome,
+no matter how large or small. If you found something odd, feel free to
+https://github.com/konstruktoid/docker-garby/issues/[submit a new issue],
+improve the code by https://github.com/konstruktoid/docker-garby/pulls[creating a pull request],
+or by https://ko-fi.com/konstruktoid[sponsoring this project].
