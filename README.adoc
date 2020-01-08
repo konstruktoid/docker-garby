@@ -1,6 +1,6 @@
 = docker-garby
 
-image::http://www.dreamworkstv.com/wp-content/uploads/2015/05/DTX-character-GARBY.jpg[Dinotrux character Garby]
+image::garby.jpg[Dinotrux character Garby]
 
 Just another Docker garbage collection script, written for Docker version 1.9
 and later.
